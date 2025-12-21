@@ -12,9 +12,9 @@ mdb_debounce::mdb_debounce(uint8_t input, uint8_t inputType, unsigned long debou
 	pinMode(_input, _inputType);
 }
 
-mdb_debounce::mdb_debounce(uint8_t input, uint8_t inputType) {              // Constructor (input = digital input pin to debounce, debounce delay defaults to 20ms)
+mdb_debounce::mdb_debounce(uint8_t input, uint8_t inputType) {          // Constructor (input = digital input pin to debounce, debounce delay defaults to 20ms)
     _input = input;                                                     // Store the digital input pin number
-	_inputType = inputType;
+	_inputType = inputType;                                             // Store the input type
     _debounceDelay = 20;                                                // Default the debounce delay to 20ms
     _inputState = false;                          			            // Initialize the input state as LOW
     _lastInputState = false;                                            // Initialize the last input state as LOW

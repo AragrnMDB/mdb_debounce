@@ -1,4 +1,4 @@
-# mdb_debug
+# mdb_debounce
 
 
 This is an Arduino library that debounces an input.  

@@ -16,7 +16,7 @@ There are two constructors that you can use to instantiate your debouncer.
 There is one public function available for your debouncer.
 - bool inputState();                                                           // Debounced state of the input
 
-## Sample code (blinks the on-board led once per second)
+## Sample code (turns on an output when a button is pressed, off when not pressed)
 
 ```` c++
     #include <mdb_debounce.h>                       // Include my debounce library

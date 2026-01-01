@@ -1,6 +1,5 @@
 # mdb_debounce
 
-
 This is an Arduino library that debounces an input.  
 
 To use the functions in the library include the file mdb_debounce.h.  
@@ -13,7 +12,8 @@ There are two constructors that you can use to instantiate your debouncer.
 
 ## Functions
 
-There is one public function available for your debouncer.
+There are two public functions available for your debouncer.
+- void begin();                                                                // Resets the debounce timer and initializes variables
 - bool inputState();                                                           // Debounced state of the input
 
 ## Sample code (turns on an output when a button is pressed, off when not pressed)
@@ -28,6 +28,7 @@ There is one public function available for your debouncer.
     void setup() {                                  // Setup function runs once
       pinMode(led,    OUTPUT);
       digitalWrite(led, LOW);                       // Turn the led off
+      debouncedOn.begin();
     }
 
     void loop() {

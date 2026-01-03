@@ -2,19 +2,6 @@
 #include "mdb_debounce.h"
 #include "mdb_timer.h"
 
-	                        
-mdb_debounce::mdb_debounce(uint8_t input, uint8_t inputType, unsigned long debounceDelay) {    // Constructor (input = digital input pin to debounce, debounce delay in milliseconds)
-    _input = input;                                                     // Store the digital input pin number
-	_inputType = inputType;
-    _debounceDelay = debounceDelay;                                     // Store the debounce delay
-}
-
-mdb_debounce::mdb_debounce(uint8_t input, uint8_t inputType) {          // Constructor (input = digital input pin to debounce, debounce delay defaults to 20ms)
-    _input = input;                                                     // Store the digital input pin number
-	_inputType = inputType;                                             // Store the input type
-    _debounceDelay = 20;                                                // Default the debounce delay to 20ms
-}
-
 void mdb_debounce::begin() {
 	_debounceTimer.resetTimer();                                        // Reset the timer
     _inputState = false;                          			            // Initialize the input state as LOW

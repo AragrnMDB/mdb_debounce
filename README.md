@@ -6,9 +6,9 @@ To use the functions in the library include the file mdb_debounce.h.
 
 ## Constructors
 
-There are two constructors that you can use to instantiate your debouncer.
-- mdb_debounce(uint8_t input, uint8_t inputType, unsigned long debounceDelay); // Constructor - input, inputType and debounce delay
-- mdb_debounce(uint8_t input, uint8_t inputType);                              // Constructor - input and inputType (defaults debounce delay to 20ms)
+There is one constructor that you can use to instantiate your debouncer. If not specified, 
+inputType will default to INPUT_PULLUP. If not specified, debounceDelay will default to 20ms.
+-  mdb_debounce(uint8_t input, uint8_t inputType=INPUT_PULLUP, unsigned long debounceDelay=20)
 
 ## Functions
 

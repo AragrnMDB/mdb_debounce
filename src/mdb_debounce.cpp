@@ -4,39 +4,68 @@
 
 void mdb_debounce::begin() {
 	_debounceTimer.resetTimer();                                        // Reset the timer
-    _inputState = false;                          			            // Initialize the input state as LOW
-    _lastInputState = false;                                            // Initialize the last input state as LOW
-	pinMode(_input, _inputType);
+    _logicalInput = false;                          			        // Initialize the input state as LOW
+    _lastLogicalInput = false;                                          // Initialize the last input state as LOW
+	_toggleInput = false;
+	_lastToggleInput = false;
+	_toggleOutput = false;
+	_edge = RISING;
+	pinMode(_input, _inputType);                                        // Set the pinMode for the input
 }
 
-boolean mdb_debounce::inputState(){                                     // Public function to return the debounced input state
-	if (_inputState) {                                                  // If we're currently reporting true
-		if (digitalRead(_input)) {                                      // If the digital input is HIGH
-			if (_lastInputState == false) {					            // If the digital input was HIGH last time
-				if (_debounceTimer.readTimer() >= _debounceDelay) {     // See if digital input has been HIGH for the debounce delay
-					_inputState = false;                                // If it has, set the input state to HIGH
-				}
-			} else {                                                    // If the last input state was not HIGH
-				_debounceTimer.resetTimer();                            // Reset the timer
-				_lastInputState = false;                                // Set the last input state to HIGH
-			}
-		} else {                                                        // If the digital input is LOW
-			_lastInputState = true;                                     // Set the last input state to LOW
+bool mdb_debounce::momentaryInput() {
+	return debouncedInput();
+}
+
+bool mdb_debounce::toggleInput(uint8_t edge) {
+	_edge = edge;
+	_toggleInput = debouncedInput();
+	if (_toggleInput != _lastToggleInput) {
+		if (_toggleInput and !_lastToggleInput and _edge == RISING) {
+			_toggleOutput = !_toggleOutput;
 		}
-	} else {                                                            // If we're currently reporting HIGH
-		if (!digitalRead(_input)) {                                     // If the digital input is LOW
-			if (_lastInputState == true)	{			       	        // If the digital input was LOW last time
-				if (_debounceTimer.readTimer() >= _debounceDelay) {     // See if digital input has been LOW for the debounce delay
-					_inputState = true;                                 // If it has, set the input state to LOW
-				}
-			}
-			else {                                                      // If the last input state was HIGH
-				_debounceTimer.resetTimer();                            // Reset the timer
-				_lastInputState = true;                                 // Set the last input state to LOW
-			}
-		} else {                                                        // If the digital input is HIGH
-			_lastInputState = false;                                    // Set the last input state to HIGH
+		if (!_toggleInput and _lastToggleInput and _edge == FALLING) {
+			_toggleOutput = !_toggleOutput;
+		}
+		_lastToggleInput = _toggleInput;
+	}
+	return _toggleOutput;
+}
+
+bool mdb_debounce::debouncedInput() {
+	// Read the physical input
+	_physicalInput = digitalRead(_input);
+	// Convert the physical input into a logical input
+	if (_physicalInput) {
+		if (_inputType == INPUT_PULLUP) {
+			_logicalInput = false;
+		} else {
+			_logicalInput = true;
+		}
+	} else {
+		if(_inputType == INPUT_PULLUP) {
+			_logicalInput = true;
+		} else {
+			_logicalInput = false;
 		}
 	}
-	return _inputState;											        // Return the debounced input state
+	// See the logical state has been constant long enough to change the debounced state
+	if (_logicalInput) {
+		if (!_lastLogicalInput) {
+			_lastLogicalInput = true;
+			_debounceTimer.resetTimer();                                // Reset the timer
+		}
+		if (_debounceTimer.readTimer() >= _debounceDelay) {             // See if the logical input has been constant for the debounce delay
+			_debouncedInput = true;
+		}
+	} else {
+		if(_lastLogicalInput) {
+			_lastLogicalInput = false;
+			_debounceTimer.resetTimer();                                // Reset the timer
+		}
+		if (_debounceTimer.readTimer() >= _debounceDelay) {             // See if the logical input has been constant for the debounce delay
+			_debouncedInput = false;
+		}
+	}
+	return _debouncedInput;
 }

@@ -14,7 +14,8 @@ inputType will default to INPUT_PULLUP. If not specified, debounceDelay will def
 
 There are two public functions available for your debouncer.
 - void begin();                                                                // Resets the debounce timer and initializes variables
-- bool inputState();                                                           // Debounced state of the input
+- bool momentaryInput();                                                       // Debounced state of the input
+- bool toggleInput(uint8_t edge);                                              // Input changes state on either the RISING or FALLING edge of a button press.
 
 ## Sample code (turns on an output when a button is pressed, off when not pressed)
 
@@ -32,7 +33,7 @@ There are two public functions available for your debouncer.
     }
 
     void loop() {
-      if (debouncedOn.inputState()) {               // If the ON button is pressed
+      if (debouncedOn.momentaryInput()) {           // If the ON button is pressed
         digitalWrite(led, HIGH);
       } else {                                      // Else
         digitalWrite(led, LOW);
